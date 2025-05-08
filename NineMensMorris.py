@@ -20,10 +20,8 @@ class NineMenMorris():
         player = self.current_player
         for mill in self.mills:
             if pos in mill:
-                for i in mill:
-                    if(self.board[i] != player):
-                        return False
-                return True
+                if all(self.board[i] == player for i in mill):
+                    return True
         return False
             
     def switch_player(self):
@@ -54,12 +52,15 @@ class NineMenMorris():
         print(p(21) + f"█"*17 + p(22) + f"█"*17 + p(23))
 
     def place_piece(self, pos):
-            self.board[pos] = self.current_player
-            self.pieces_to_place[self.current_player] -= 1
-            self.pieces_on_board[self.current_player] += 1
+        self.board[pos] = self.current_player
+        self.pieces_to_place[self.current_player] -= 1
+        self.pieces_on_board[self.current_player] += 1
+
+    def remove_piece(self, pos):
+        self.board[pos] = pos  
             
 def main():
-    game = NineMenMorris();
+    game = NineMenMorris()
     while(True):
         x = 0
         x = int(input(f"{game.current_player} turn:"))
@@ -71,6 +72,8 @@ def main():
             print(f"{x} position is occupied")
         if game.check_mill(x) == True:
             print("Mill formed")
+            x = int(input(f"{game.current_player} choose piece to removed:"))
+            game.remove_piece(x)
         else:
             print("No Mill formed")
         game.switch_player()
